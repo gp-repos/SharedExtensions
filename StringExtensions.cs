@@ -218,16 +218,9 @@ public static class StringExtensions
 
     /// <summary>Convert text's case to a title case</summary>
     /// <remarks>UppperCase characters is the source string after the first of each word are lowered, unless the word is exactly 2 characters</remarks>
-    public static string ToTitleCase(this string value)
+    public static string ToTitleCase(this string value, CultureInfo culture = null)
     {
-        return ToTitleCase(value, CultureInfo.CurrentCulture);
-    }
-
-    /// <summary>Convert text's case to a title case</summary>
-    /// <remarks>UppperCase characters is the source string after the first of each word are lowered, unless the word is exactly 2 characters</remarks>
-    public static string ToTitleCase(this string value, CultureInfo culture)
-    {
-        return culture.TextInfo.ToTitleCase(value);
+        return (culture ?? CultureInfo.CurrentCulture).TextInfo.ToTitleCase(value);
     }
 
     /// <summary>
@@ -287,6 +280,10 @@ public static class StringExtensions
         return bytes;
     }
 
+    public static string ToBase64(this string source)
+    {
+        return Convert.ToBase64String(Encoding.UTF8.GetBytes(source));
+    }
 
     public static string SplitCamelCase(this String source)
     {
@@ -303,15 +300,25 @@ public static class StringExtensions
         return result;
     }
 
-    private static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
-    private static int DEFAULT_MAX_PASSWORD_LENGTH = 16;
-    private static string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
-    private static string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
-    private static string PASSWORD_CHARS_NUMERIC = "0123456789";
-    private static string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
+    public static string RandomNum(int Length)
+    {
+        char[] chars = "0123456789".ToCharArray();
+
+        string result = "";
+
+        for (int i = 0; i < Length; i++)
+            result += chars[rndOne.Next(chars.Length)].ToString();
+
+        return result;
+    }
 
     public static string Genarate(int Length, bool AllowNumbers = false, bool AllowSpecialChars = false)
     {
+        const string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
+        const string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
+        const string PASSWORD_CHARS_NUMERIC = "0123456789";
+        const string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
+
         string strRandom = PASSWORD_CHARS_UCASE;
         if (AllowNumbers) strRandom += PASSWORD_CHARS_NUMERIC;
         if (AllowSpecialChars) strRandom += PASSWORD_CHARS_SPECIAL;
@@ -330,7 +337,31 @@ public static class StringExtensions
 
     public static string Genarate(bool AllowNumbers = false, bool AllowSpecialChars = false)
     {
+        const int DEFAULT_MIN_PASSWORD_LENGTH = 8;
+        const int DEFAULT_MAX_PASSWORD_LENGTH = 16;
+
         return Genarate(rndOne.Next(DEFAULT_MIN_PASSWORD_LENGTH, DEFAULT_MAX_PASSWORD_LENGTH), AllowNumbers, AllowSpecialChars);
+    }
+
+    public static string CommonString(string[] stringArray)
+    {
+        string result = stringArray.FirstOrDefault();
+        foreach (string aItem in stringArray)
+            result = CommonString(result, aItem);
+        return result;
+    }
+
+    public static string CommonString(string stringA, string stringB)
+    {
+        int size = stringA.Length;
+        if (stringB.Length < size)
+            size = stringB.Length;
+
+        int i = 0;
+        while (i < size && stringA[i] == stringB[i])
+            i++;
+
+        return stringA.Substring(0, i);
     }
 
 }
