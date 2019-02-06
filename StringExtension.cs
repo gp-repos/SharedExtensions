@@ -3,10 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-public static class StringExtensions
+public static class StringExtension
 {
-    public static Random rndOne = new Random();
-
     /// <summary>
     /// 	Trims the text to a provided maximum length.
     /// </summary>
@@ -273,9 +271,7 @@ public static class StringExtensions
         int max_byte = str.Length / 2 - 1;
         var bytes = new byte[max_byte + 1];
         for (int i = 0; i <= max_byte; i++)
-        {
             bytes[i] = byte.Parse(str.Substring(2 * i, 2), NumberStyles.AllowHexSpecifier);
-        }
 
         return bytes;
     }
@@ -298,49 +294,6 @@ public static class StringExtensions
             result += source[i].ToString();
         }
         return result;
-    }
-
-    public static string RandomNum(int Length)
-    {
-        char[] chars = "0123456789".ToCharArray();
-
-        string result = "";
-
-        for (int i = 0; i < Length; i++)
-            result += chars[rndOne.Next(chars.Length)].ToString();
-
-        return result;
-    }
-
-    public static string Genarate(int Length, bool AllowNumbers = false, bool AllowSpecialChars = false)
-    {
-        const string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
-        const string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
-        const string PASSWORD_CHARS_NUMERIC = "0123456789";
-        const string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
-
-        string strRandom = PASSWORD_CHARS_UCASE;
-        if (AllowNumbers) strRandom += PASSWORD_CHARS_NUMERIC;
-        if (AllowSpecialChars) strRandom += PASSWORD_CHARS_SPECIAL;
-        strRandom += PASSWORD_CHARS_LCASE;
-        if (AllowNumbers) strRandom += PASSWORD_CHARS_NUMERIC;
-
-        char[] chars = strRandom.ToCharArray();
-
-        string result = "";
-
-        for (int i = 0; i < Length; i++)
-            result += chars[rndOne.Next(chars.Length)].ToString();
-
-        return result;
-    }
-
-    public static string Genarate(bool AllowNumbers = false, bool AllowSpecialChars = false)
-    {
-        const int DEFAULT_MIN_PASSWORD_LENGTH = 8;
-        const int DEFAULT_MAX_PASSWORD_LENGTH = 16;
-
-        return Genarate(rndOne.Next(DEFAULT_MIN_PASSWORD_LENGTH, DEFAULT_MAX_PASSWORD_LENGTH), AllowNumbers, AllowSpecialChars);
     }
 
     public static string CommonString(string[] stringArray)
