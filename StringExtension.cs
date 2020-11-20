@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -317,4 +318,100 @@ public static class StringExtension
         return stringA.Substring(0, i);
     }
 
+    public static string Transliterate(string rusText)
+    {
+        char[] AllowedChars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890 -.".ToArray();
+
+        Dictionary<string, string> dictionary = new Dictionary<string, string>()
+                {
+                    { "й", "j" }, { "ц", "ts" }, { "у", "u" }, { "к", "k" }, { "е", "e" }, { "ё", "jo" }, { "н", "n" }, { "г", "g" }, { "ш", "sh" }, { "щ", "sh" }, { "з", "z" }, { "х", "h" }, { "ъ", "" }, { "ф", "f" }, { "ы", "i" }, { "в", "v" }, { "а", "a" }, { "п", "p" }, { "р", "r" }, { "о", "o" }, { "л", "l" }, { "д", "d" }, { "ж", "zh" }, { "э", "e" }, { "я", "ja" }, { "ч", "ch" }, { "с", "s" }, { "м", "m" }, { "и", "i" }, { "т", "t" }, { "ь", "" }, { "б", "b" }, { "ю", "u" },
+                    { "Й", "J" }, { "Ц", "Ts" }, { "У", "U" }, { "К", "K" }, { "Е", "E" }, { "Ё", "Jo" }, { "Н", "N" }, { "Г", "G" }, { "Ш", "Sh" }, { "Щ", "Sh" }, { "З", "Z" }, { "Х", "H" }, { "Ъ", "" }, { "Ф", "F" }, { "Ы", "I" }, { "В", "V" }, { "А", "A" }, { "П", "P" }, { "Р", "R" }, { "О", "O" }, { "Л", "L" }, { "Д", "D" }, { "Ж", "Zh" }, { "Э", "E" }, { "Я", "Ja" }, { "Ч", "Ch" }, { "С", "S" }, { "М", "M" }, { "И", "I" }, { "Т", "T" }, { "Ь", "" }, { "Б", "B" }, { "Ю", "U" }
+                };
+
+        foreach (KeyValuePair<string, string> kvp in dictionary)
+            rusText = rusText.Replace(kvp.Key, kvp.Value);
+
+        string result = new string(rusText.Where(s => AllowedChars.Contains(s)).ToArray());
+
+      //  result = result.Trim().Replace(".", "-").Replace(" ", "-");
+
+        while (result.Contains("--"))
+            result = result.Replace("--", "-");
+        return result;
+    }
+
+    public static string TransliterateSlug(string rusText)
+    {
+        char[] AllowedChars = "qwertyuiopasdfghjklzxcvbnm1234567890 ".ToArray();
+
+        Dictionary<string, string> dictionary = new Dictionary<string, string>()
+        {
+            { "й", "j" },
+            { "ц", "c" },
+            { "у", "u" },
+            { "к", "k" },
+            { "е", "e" },
+            { "ё", "yo" },
+            { "н", "n" },
+            { "г", "g" },
+            { "ш", "sh" },
+            { "щ", "shch" },
+            { "з", "z" },
+            { "х", "h" },
+            { "ъ", "" },
+            { "ф", "f" },
+            { "ы", "y" },
+            { "в", "v" },
+            { "а", "a" },
+            { "п", "p" },
+            { "р", "r" },
+            { "о", "o" },
+            { "л", "l" },
+            { "д", "d" },
+            { "ж", "zh" },
+            { "э", "eh" },
+            { "я", "ya" },
+            { "ч", "ch" },
+            { "с", "s" },
+            { "м", "m" },
+            { "и", "i" },
+            { "т", "t" },
+            { "ь", "" },
+            { "б", "b" },
+            { "ю", "yu" }
+        };
+
+
+        Dictionary<string, string> extra = new Dictionary<string, string>()
+        {
+            { "кх", "kkh" },
+            { "зх", "zkh" },
+            { "цх", "ckh" },
+            { "сх", "skh" },
+            { "ех", "ekh" },
+            { "шх", "shkh" },
+            { "щх", "shchkh" },
+            { "хх", "khhkh" },
+            { "жх", "zhkh" },
+            { "эх", "ehkh" },
+            { "чх", "chkh" }
+        };
+
+        rusText = rusText.ToLower();
+
+        foreach (KeyValuePair<string, string> kvp in extra)
+            rusText = rusText.Replace(kvp.Key, kvp.Value);
+
+        foreach (KeyValuePair<string, string> kvp in dictionary)
+            rusText = rusText.Replace(kvp.Key, kvp.Value);
+
+        string result = new string(rusText.Select(s => AllowedChars.Contains(s) ? s : '-').ToArray());// rusText.Where(s => AllowedChars.Contains(s)).ToArray());
+
+        result = result.Trim().Replace(".", "-").Replace(" ", "-");
+
+        while (result.Contains("--"))
+            result = result.Replace("--", "-");
+
+        return result.Trim('-');
+    }
 }
